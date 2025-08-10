@@ -79,6 +79,22 @@ def print_menu(chunk_options: List[str]) -> None:
     console.print("\n[bold cyan]Catatan: IHDR, IDAT, IEND wajib untuk PNG valid, tetapi bisa dikorupsi.[/bold cyan]")
     console.print("[bold yellow]Masukkan nomor chunk (pisahkan dengan koma, kosongkan untuk default [IHDR, IDAT, IEND]):[/bold yellow]")
 
+def print_anonymous_logo() -> None:
+    """Menampilkan logo ASCII Anonymous"""
+    logo = f"""
+{Colors.RED}{Colors.BOLD}
+       .-""""""""-.
+     .'          '.
+    /   ʕ ˵• ₒ •˵ ʔ  / 
+   :               ';
+    : ,          : '
+     `._         _.'  
+        `"'"""""'"` 
+{Colors.RESET}
+{Colors.CYAN}[*] We are Anonymous. We are Legion. Expect us.[/bold cyan]
+"""
+    console.print(Panel(logo, title="Anonymous", style="red", border_style="purple"))
+
 def create_ihdr_chunk(width: int = 8192, height: int = 8192) -> bytes:
     """Menyusun IHDR dengan dimensi ekstrem dan tipe warna acak"""
     color_types = [0, 2, 3, 4, 6]
@@ -314,6 +330,7 @@ def create_corrupt_png(filename: str, selected_chunks: List[str], compression_le
             f.write(png_header + b"".join(chunks))
     
     console.print(f"[bold green][+] File '{filename}' berhasil dibuat dengan chunk: {', '.join(selected_chunks)}[/bold green]")
+    console.print(Panel("[bold red][!] Sebarkan gambar itu segera![/bold red]", style="red", border_style="yellow"))
 
 def main_menu() -> None:
     """Menjalankan menu utama dengan antarmuka interaktif modern"""
@@ -346,6 +363,28 @@ def main_menu() -> None:
         filename = Prompt.ask("[bold yellow]>> Masukkan nama file (default: disguised.png)[/bold yellow]", default="disguised.png")
         compression_level = int(Prompt.ask("[bold yellow]>> Masukkan level kompresi (0-9, default: 9)[/bold yellow]", default="9"))
         data_size = int(Prompt.ask("[bold yellow]>> Masukkan ukuran data IDAT (default: 10000)[/bold yellow]", default="10000"))
+        
+        # Autentikasi ID Cyber
+        cyber_id = Prompt.ask("[bold yellow]>> Masukkan ID Cyber Anda[/bold yellow]")
+        if cyber_id != "503rexsec":
+            console.print("[bold red][-] ID Cyber salah. Akses ditolak.[/bold red]")
+            return
+        
+        # Autentikasi Konfigurasi Server
+        server_config = Prompt.ask("[bold yellow]>> Masukkan konfigurasi server[/bold yellow]")
+        if server_config != "anonymousrex503":
+            console.print("[bold red][-] Konfigurasi server salah. Akses ditolak.[/bold red]")
+            return
+        
+        # Tampilkan logo Anonymous
+        print_anonymous_logo()
+        
+        # Animasi loading
+        with Progress(SpinnerColumn(), TextColumn("[cyan]Memproses autentikasi dan memulai pembuatan file...[/cyan]"), console=console) as progress:
+            task = progress.add_task("", total=100)
+            for _ in range(100):
+                time.sleep(0.03)
+                progress.update(task, advance=1)
         
         console.print("[bold cyan][*] Menciptakan file PNG korup...[/bold cyan]")
         create_corrupt_png(filename, selected_chunks, compression_level, data_size)
