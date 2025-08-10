@@ -8,9 +8,7 @@ from typing import List, Dict, Callable
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
-from rich.table import Table
 from rich.prompt import Prompt, Confirm
-import numpy as np
 
 # Inisialisasi Rich Console untuk CLI modern
 console = Console()
@@ -38,46 +36,42 @@ def print_banner() -> None:
     console.print("[bold cyan][*] Pilih chunk untuk menciptakan kekacauan digital maksimal.[/bold cyan]")
 
 def print_menu(chunk_options: List[str]) -> None:
-    """Menampilkan menu interaktif dengan tabel Rich"""
-    table = Table(title="Menu Korupsi PNG", style="purple")
-    table.add_column("No", style="cyan", justify="center")
-    table.add_column("Chunk", style="green")
-    table.add_column("Deskripsi", style="yellow")
-    
-    chunk_descriptions = {
-        "IHDR": "Header PNG, mengatur dimensi dan format",
-        "PLTE": "Palet warna, untuk manipulasi warna rusak",
-        "IDAT": "Data gambar, inti korupsi visual",
-        "IEND": "Penutup PNG, sering untuk CRC rusak",
-        "tRNS": "Transparansi, memicu error rendering",
-        "cHRM": "Gamut warna, untuk distorsi warna",
-        "gAMA": "Gamma, untuk manipulasi kecerahan",
-        "iCCP": "Profil warna ICC, membebani memori",
-        "sBIT": "Bit signifikan, untuk error parsing",
-        "sRGB": "Ruang warna sRGB, untuk rendering cacat",
-        "tEXt": "Teks, untuk buffer overflow",
-        "zTXt": "Teks terkompresi, untuk crash parser",
-        "iTXt": "Teks internasional, untuk encoding rusak",
-        "bKGD": "Warna latar, untuk rendering salah",
-        "pHYs": "Dimensi fisik, untuk DPI ekstrem",
-        "sPLT": "Palet sugesti, untuk error parsing",
-        "hIST": "Histogram, untuk crash parser",
-        "tIME": "Waktu, untuk metadata tidak valid",
-        "oFFs": "Offset, untuk posisi gambar salah",
-        "pCAL": "Kalibrasi piksel, untuk error skala",
-        "sCAL": "Skala fisik, untuk crash parser",
-        "fRAc": "Data fraktal, untuk korupsi kompleks",
-        "gIFg": "Data GIF usang, untuk kebingungan",
-        "gIFt": "Teks GIF, untuk error parsing",
-        "gIFx": "Ekstensi GIF, untuk data acak"
-    }
-    
+    """Menampilkan menu interaktif dengan format teks bergaya hacker, tanpa tabel"""
+    console.print(f"\n{Colors.PURPLE}=== MENU KORUPSI PNG ==={Colors.RESET}")
+    console.print(f"{Colors.YELLOW}Chunk Tersedia:{Colors.RESET}")
     for i, chunk in enumerate(chunk_options, 1):
-        table.add_row(str(i), chunk, chunk_descriptions.get(chunk, "Fungsi khusus"))
-    
-    console.print(table)
-    console.print("\n[bold cyan]Catatan: IHDR, IDAT, IEND wajib untuk PNG valid, tetapi bisa dikorupsi.[/bold cyan]")
-    console.print("[bold yellow]Masukkan nomor chunk (pisahkan dengan koma, kosongkan untuk default [IHDR, IDAT, IEND]):[/bold yellow]")
+        console.print(f"{Colors.GREEN}[{i}] {chunk} - {chunk_descriptions.get(chunk, 'Fungsi khusus')}{Colors.RESET}")
+    console.print(f"\n{Colors.CYAN}Catatan: IHDR, IDAT, IEND wajib untuk PNG valid, tetapi bisa dikorupsi.")
+    console.print(f"Masukkan nomor chunk (pisahkan dengan koma, kosongkan untuk default [IHDR, IDAT, IEND]):{Colors.RESET}")
+
+# Deskripsi chunk untuk menu
+chunk_descriptions = {
+    "IHDR": "Header PNG, mengatur dimensi dan format",
+    "PLTE": "Palet warna, untuk manipulasi warna rusak",
+    "IDAT": "Data gambar, inti korupsi visual",
+    "IEND": "Penutup PNG, sering untuk CRC rusak",
+    "tRNS": "Transparansi, memicu error rendering",
+    "cHRM": "Gamut warna, untuk distorsi warna",
+    "gAMA": "Gamma, untuk manipulasi kecerahan",
+    "iCCP": "Profil warna ICC, membebani memori",
+    "sBIT": "Bit signifikan, untuk error parsing",
+    "sRGB": "Ruang warna sRGB, untuk rendering cacat",
+    "tEXt": "Teks, untuk buffer overflow",
+    "zTXt": "Teks terkompresi, untuk crash parser",
+    "iTXt": "Teks internasional, untuk encoding rusak",
+    "bKGD": "Warna latar, untuk rendering salah",
+    "pHYs": "Dimensi fisik, untuk DPI ekstrem",
+    "sPLT": "Palet sugesti, untuk error parsing",
+    "hIST": "Histogram, untuk crash parser",
+    "tIME": "Waktu, untuk metadata tidak valid",
+    "oFFs": "Offset, untuk posisi gambar salah",
+    "pCAL": "Kalibrasi piksel, untuk error skala",
+    "sCAL": "Skala fisik, untuk crash parser",
+    "fRAc": "Data fraktal, untuk korupsi kompleks",
+    "gIFg": "Data GIF usang, untuk kebingungan",
+    "gIFt": "Teks GIF, untuk error parsing",
+    "gIFx": "Ekstensi GIF, untuk data acak"
+}
 
 def print_anonymous_logo() -> None:
     """Menampilkan logo ASCII Anonymous"""
@@ -113,7 +107,7 @@ def create_plte_chunk() -> bytes:
 
 def create_idat_chunk(compression_level: int = 9, data_size: int = 10000) -> bytes:
     """Menyusun IDAT dengan data acak besar dan kompresi ekstrem"""
-    idat_data = bytearray(np.random.bytes(data_size)) + b"\x00\xff" * (data_size // 2)
+    idat_data = bytearray([random.randint(0, 255) for _ in range(data_size)]) + b"\x00\xff" * (data_size // 2)
     idat_compressed = zlib.compress(idat_data, level=compression_level)
     idat_chunk = b"IDAT" + idat_compressed
     idat_crc = zlib.crc32(idat_chunk) & 0xffffffff
@@ -148,7 +142,7 @@ def create_gama_chunk() -> bytes:
 
 def create_iccp_chunk() -> bytes:
     """Menyisipkan iCCP dengan profil besar untuk membebani memori"""
-    iccp_data = b"Profile\0" + np.random.bytes(10000)
+    iccp_data = b"Profile\0" + bytes([random.randint(0, 255) for _ in range(10000)])
     iccp_compressed = zlib.compress(iccp_data, level=9)
     iccp_chunk = b"iCCP" + iccp_compressed
     iccp_crc = zlib.crc32(iccp_chunk) & 0xffffffff
@@ -218,7 +212,7 @@ def create_hist_chunk() -> bytes:
     return struct.pack(">I", len(hist_data)) + hist_chunk + struct.pack(">I", hist_crc)
 
 def create_time_chunk() -> bytes:
-    """Menyisipkan tIME dengan waktu acak atau tidak valid"""
+    """Menyusun tIME dengan waktu acak atau tidak valid"""
     year = random.randint(-1000, 9999)
     time_data = struct.pack(">HBBBBBB", year, 0, 0, 0, 0, 0, 0)
     time_chunk = b"tIME" + time_data
@@ -233,7 +227,7 @@ def create_offs_chunk() -> bytes:
     return struct.pack(">I", len(offs_data)) + offs_chunk + struct.pack(">I", offs_crc)
 
 def create_pcal_chunk() -> bytes:
-    """Menyisipkan pCAL dengan kalibrasi tidak valid"""
+    """Menyusun pCAL dengan kalibrasi tidak valid"""
     pcal_data = b"Calibration\0" + struct.pack(">iiBB", -1000, 1000, 0, 0)
     pcal_chunk = b"pCAL" + pcal_data
     pcal_crc = zlib.crc32(pcal_chunk) & 0xffffffff
@@ -247,8 +241,8 @@ def create_scal_chunk() -> bytes:
     return struct.pack(">I", len(scal_data)) + scal_chunk + struct.pack(">I", scal_crc)
 
 def create_frac_chunk() -> bytes:
-    """Menyisipkan fRAc dengan data fraktal kompleks"""
-    frac_data = np.random.bytes(5000)
+    """Menyusun fRAc dengan data fraktal kompleks"""
+    frac_data = bytes([random.randint(0, 255) for _ in range(5000)])
     frac_chunk = b"fRAc" + frac_data
     frac_crc = zlib.crc32(frac_chunk) & 0xffffffff
     return struct.pack(">I", len(frac_data)) + frac_chunk + struct.pack(">I", frac_crc)
@@ -269,7 +263,7 @@ def create_gift_chunk() -> bytes:
 
 def create_gifx_chunk() -> bytes:
     """Menyusun gIFx dengan ekstensi acak"""
-    gifx_data = np.random.bytes(1000)
+    gifx_data = bytes([random.randint(0, 255) for _ in range(1000)])
     gifx_chunk = b"gIFx" + gifx_data
     gifx_crc = zlib.crc32(gifx_chunk) & 0xffffffff
     return struct.pack(">I", len(gifx_data)) + gifx_chunk + struct.pack(">I", gifx_crc)
@@ -357,7 +351,7 @@ def main_menu() -> None:
                     console.print(f"[bold red][-] Nomor tidak valid: {', '.join(map(str, [i+1 for i in invalid_indices]))}. Menggunakan default.[/bold red]")
                     selected_chunks = ["IHDR", "IDAT", "IEND"]
             except ValueError:
-                console.print("[bold red][-] Input tidak valid. Menggunakan default.[/bold red]")
+                console.print(f"[bold red][-] Input tidak valid. Menggunakan default.[/bold red]")
                 selected_chunks = ["IHDR", "IDAT", "IEND"]
         
         filename = Prompt.ask("[bold yellow]>> Masukkan nama file (default: disguised.png)[/bold yellow]", default="disguised.png")
