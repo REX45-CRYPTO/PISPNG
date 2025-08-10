@@ -85,11 +85,11 @@ def print_anonymous_logo() -> None:
 {Colors.RED}{Colors.BOLD}
        .-""""""""-.
      .'          '.
-    /   ʕ ˵• ₒ •˵ ʔ  / 
+    /   ʕ ˵• ₒ •˵ ʔ  /
    :               ';
     : ,          : '
-     `._         _.'  
-        `"'"""""'"` 
+     `._         _.'
+        '"''''''"'
 {Colors.RESET}
 {Colors.CYAN}[*] We are Anonymous. We are Legion. Expect us.[/bold cyan]
 """
