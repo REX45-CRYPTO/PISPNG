@@ -85,7 +85,7 @@ def print_anonymous_logo() -> None:
      `._         _.'
         '"''''''"'
 {Colors.RESET}
-{Colors.CYAN}[*] We are Anonymous. We are Legion. Expect us.[/bold cyan]
+{Colors.CYAN}[*] We are Anonymous. We are Legion. Expect us.[/cyan]
 """
     console.print(Panel(logo, title="Anonymous", style="red", border_style="purple"))
 
